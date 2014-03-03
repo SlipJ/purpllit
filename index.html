@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Purpllit</title>
+    <link href="../purpllit/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="../purpllit/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="../purpllit/static/custom.js"></script>
+    <style type='text/css'>
+        .purple-title { color: purple }
+        div.purple-title:hover { color: #e600e6}
+    </style>
+    <script>
+
+    </script>
+</head>
+<body>
+    <div id="head-title" class="h1 text-center purple-title">
+        Purpllit
+    </div>
+    <div id="subtitle" style="display:none" class="text-center">
+        A Purple Reddit
+    </div>
+
+    <div class="container-fluid links-list" id="links-list">
+    </div>
+
+    <script type="text/html" id="item_tmpl">
+        <% for ( var i = 0; i < data_list.length; i++ ) { %>
+            <div class="table-bordered img-rounded col-lg-6">
+                <a href="<%=data_list[i].link%>" class="modal-title">
+                    <span class="badge"><%=data_list[i].upvotes%></span> <%=data_list[i].title%></a>
+                <p class="small"><%=data_list[i].datetime%>, by <%=data_list[i].username%></p>
+            </div>
+        <% } %>
+    </script>
+
+    <script>
+
+    $().ready(function(){
+        $("#head-title").click(function(){
+            $("#subtitle").toggle();
+        });
+    });
+    </script>
+
+    <script type='text/javascript'>
+    $(window).load(function(){
+    (function(){
+      var cache = {};
+
+      this.tmpl = function tmpl(str, data){
+        var fn = !/\W/.test(str) ?
+          cache[str] = cache[str] ||
+            tmpl(document.getElementById(str).innerHTML) :
+
+          new Function("obj",
+            "var p=[],print=function(){p.push.apply(p,arguments);};" +
+
+            "with(obj){p.push('" +
+
+            str
+              .replace(/[\r\t\n]/g, " ")
+              .split("<%").join("\t")
+              .replace(/((^|%>)[^\t]*)'/g, "$1\r")
+              .replace(/\t=(.*?)%>/g, "',$1,'")
+              .split("\t").join("');")
+              .split("%>").join("p.push('")
+              .split("\r").join("\\'")
+          + "');}return p.join('');");
+
+        return data ? fn( data ) : fn;
+      };
+    })();
+
+    var data_list = [
+        {
+        title:"Check out this crazy commercial",
+        link:"http://www.youtube.com/watch?v=UURgWOMLESY",
+        upVotes:"45",
+        downVotes:"",
+        datetime:"March 01, 2013. 21:22:00",
+        username:"Purple User"
+        },
+        {
+        title:"Check out this crazy commercial",
+        link:"http://www.youtube.com/watch?v=UURgWOMLESY",
+        upVotes:"45",
+        downVotes:"",
+        datetime:"March 01, 2013. 21:22:00",
+        username:"Purple User"
+        }
+    ];
+    $("#links-list").html(tmpl("item_tmpl", {'data_list': data_list}));
+
+    });//]]>
+    </script>
+</body>
+</html>
