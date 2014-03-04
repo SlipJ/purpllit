@@ -22,14 +22,29 @@
         A Purple Reddit
     </div>
 
+    <form role="form" class="form-inline" onsubmit="addLink(this)">
+        <div class="form-group">
+            <input id="new_title" class="form-control" type="text" placeholder="Title">
+        </div>
+        <div class="form-group">
+            <input id="new_link" class="form-control" type="url" placeholder="Link">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+    <br>
+
     <div class="container-fluid links-list" id="links-list">
     </div>
 
     <script type="text/html" id="item_tmpl">
         <% for ( var i = 0; i < data_list.length; i++ ) { %>
-            <div class="table-bordered img-rounded col-lg-6">
+            <div class="table-bordered img-rounded col-md-8">
                 <a href="<%=data_list[i].link%>" class="modal-title">
-                    <span class="badge"><%=data_list[i].upvotes%></span> <%=data_list[i].title%></a>
+                    <span id="votes_<%=i%>" class="badge"><%=data_list[i].upVotes%></span> <%=data_list[i].title%></a>
+                <div class="btn-group pull-right">
+                  <button type="button" class="btn btn-default button_<%=i%>" onclick="voteFunc(<%=i%>, 1)">Up</button>
+                  <button type="button" class="btn btn-default button_<%=i%>" onclick="voteFunc(<%=i%>, -1)">Down</button>
+                </div>
                 <p class="small"><%=data_list[i].datetime%>, by <%=data_list[i].username%></p>
             </div>
         <% } %>
@@ -45,6 +60,56 @@
     </script>
 
     <script type='text/javascript'>
+    var data_list = [
+        {
+        title:"Check out this crazy commercial",
+        link:"http://www.youtube.com/watch?v=UURgWOMLESY",
+        upVotes:45,
+        downVotes:0,
+        datetime:"March 01, 2013. 21:22:00",
+        username:"Purple User"
+        },
+        {
+        title:"Check out this crazy commercial",
+        link:"http://www.youtube.com/watch?v=UURgWOMLESY",
+        upVotes:15,
+        downVotes:0,
+        datetime:"June 01, 2013. 21:22:00",
+        username:"Purple User"
+        }
+    ];
+
+    function voteFunc(id, vote)
+    {
+        var votes = document.getElementById("votes_" + id)
+        votes.innerText = parseInt(votes.innerText) + parseInt(vote)
+        var buttons = document.getElementsByClassName("button_" + id)
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].className += " disabled"
+        }
+    };
+
+    $( "form" ).on( "submit", function( event ) {
+        event.preventDefault();
+    });
+
+    function addLink(form)
+    {
+        var d = new Date()
+
+        var newLink = {
+            title:form.new_title.value,
+            link:form.new_link.value,
+            upVotes:0,
+            downVotes:0,
+            datetime: d.toLocaleString(),
+            username:"Purple User"
+        };
+        data_list.push(newLink)
+        var ordered_data = data_list.sort(postOrderCompare)
+        $("#links-list").html(tmpl("item_tmpl", {'data_list': ordered_data}));
+    };
+
     $(window).load(function(){
     (function(){
       var cache = {};
@@ -73,27 +138,22 @@
       };
     })();
 
-    var data_list = [
-        {
-        title:"Check out this crazy commercial",
-        link:"http://www.youtube.com/watch?v=UURgWOMLESY",
-        upVotes:"45",
-        downVotes:"",
-        datetime:"March 01, 2013. 21:22:00",
-        username:"Purple User"
-        },
-        {
-        title:"Check out this crazy commercial",
-        link:"http://www.youtube.com/watch?v=UURgWOMLESY",
-        upVotes:"45",
-        downVotes:"",
-        datetime:"March 01, 2013. 21:22:00",
-        username:"Purple User"
-        }
-    ];
-    $("#links-list").html(tmpl("item_tmpl", {'data_list': data_list}));
+
+    var ordered_data = data_list.sort(postOrderCompare)
+
+    $("#links-list").html(tmpl("item_tmpl", {'data_list': ordered_data}));
 
     });//]]>
+    function postOrderCompare(a, b) {
+        var aDate = new Date(Date.parse(a.datetime));
+        var bDate = new Date(Date.parse(b.datetime));
+        if (aDate < bDate)
+            return 1;
+        if (Date(Date.parse(a.datetime)) > Date(Date.parse(b.datetime)))
+            return -1;
+        // a must be equal to
+        return 0;
+        }
     </script>
 </body>
 </html>
