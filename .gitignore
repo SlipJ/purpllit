@@ -3,8 +3,6 @@
 
 *.xml
 
-*.css
-
 *.map
 
 *.eot
@@ -15,10 +13,10 @@
 
 *.woff
 
-*.js
-
 *.otf
 
 *.less
 
 *.scss
+
+angular-phonecat/

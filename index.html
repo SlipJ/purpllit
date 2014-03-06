@@ -2,37 +2,39 @@
 <html>
 <head>
     <title>Purpllit</title>
-    <link href="../static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/purpllit.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="../static/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../static/custom.js"></script>
-    <style type='text/css'>
-        .purple-title { color: purple }
-        div.purple-title:hover { color: #e600e6}
-    </style>
-    <script>
-
-    </script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/purpllit.js"></script>
 </head>
+
+
 <body>
+    <!-- Title -->
     <div id="head-title" class="h1 text-center purple-title">
         Purpllit
     </div>
     <div id="subtitle" style="display:none" class="text-center">
         A Purple Reddit
     </div>
+    <!-- End Title -->
+
+
+
     <div class="container-fluid">
-        <div class="row">
+        <!-- Username and change -->
+        <div class="row" id="current-username">
             <div class="col-sm-2 pull-right">
-                <button id="change-username" type="button" class="btn btn-default">Change</button>
+                <button type="button" class="btn btn-default">Change</button>
             </div>
             <div class="pull-right col-sm-3">Your username: <span id="username" class="username">Purple User</span></div>
         </div>
-        <div id="username-changeform" class="row" style="display:none">
+        <div id="change-username" class="row" style="display:none">
             <div class="col-sm-2 pull-right">
             </div>
             <div class="pull-right col-sm-3">
-                <form role="form" class="form-inline" onsubmit="changeUsername(this)">
+                <form  id="new_username_form" role="form" class="form-inline" onsubmit="Purpllit.changeUsername(this)">
                     <div class="form-group">
                         <input id="new_username" class="form-control" type="text" placeholder="Enter New Username">
                     </div>
@@ -40,174 +42,73 @@
                 </form>
             </div>
         </div>
+        <!-- End Username and change -->
+
+
+        <!-- New link Form -->
+        <div class="row">
+            <div class="col-sm-6">
+                <form id="new_link_form" role="form" class="form-inline" onsubmit="Purpllit.addLink(this)">
+                    <div class="form-group">
+                        <input id="new_title" class="form-control" type="text" placeholder="Title" required>
+                    </div>
+                    <div class="form-group">
+                        <input id="new_link" class="form-control" type="url" placeholder="Link" required>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+            </div>
+        </div>
+        <!-- End New link Form -->
     </div>
     <br>
 
-    <form role="form" class="form-inline" onsubmit="addLink(this)">
-        <div class="form-group">
-            <input id="new_title" class="form-control" type="text" placeholder="Title">
-        </div>
-        <div class="form-group">
-            <input id="new_link" class="form-control" type="url" placeholder="Link">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-    </form>
-    <br>
 
+
+    <!-- Links List -->
     <div class="container-fluid links-list" id="links-list">
     </div>
+    <!-- End Links List -->
 
+
+    <!-- Link template -->
     <script type="text/html" id="item_tmpl">
         <% for ( var i = 0; i < data_list.length; i++ ) { %>
             <div class="table-bordered img-rounded col-md-8">
                 <a href="<%=data_list[i].link%>" class="modal-title">
-                    <span id="votes_<%=i%>" class="badge"><%=data_list[i].upVotes%></span> <%=data_list[i].title%></a>
+                    <span id="votes_<%=i%>" class="badge"><%=data_list[i].votes%></span> <%=data_list[i].title%></a>
                 <div class="btn-group pull-right">
-                  <button type="button" class="btn btn-default button_<%=i%>" onclick="voteFunc(<%=i%>, 1)">Up</button>
-                  <button type="button" class="btn btn-default button_<%=i%>" onclick="voteFunc(<%=i%>, -1)">Down</button>
+                  <button type="button"
+                          class="btn btn-default button_<%=i%> vote_up <% if ( data_list[i].voted && data_list[i].voted_up) { %>active<% } %>"
+                          onclick="Purpllit.vote(<%=i%>, 1)"
+                          <% if ( data_list[i].voted && !data_list[i].voted_up) { %>disabled<% } %>>Up</button>
+                  <button type="button" class="btn btn-default button_<%=i%> vote_down <% if ( data_list[i].voted && !data_list[i].voted_up) { %>active<% } %>"
+                          onclick="Purpllit.vote(<%=i%>, -1)"
+                          <% if ( data_list[i].voted && data_list[i].voted_up) { %>disabled<% } %>>Down</button>
                 </div>
                 <p class="small"><%=data_list[i].datetime%>, by <span class="username"><%=data_list[i].username%></span></p>
             </div>
         <% } %>
     </script>
+    <!-- End Link template -->
+
 
     <script>
-
     $().ready(function(){
         $("#head-title").click(function(){
             $("#subtitle").toggle();
         });
-    });
-
-    $().ready(function(){
-        $("#change-username").click(function(){
-            $("#username-changeform").toggle();
+        $("#current-username").click(function(){
             $("#change-username").toggle();
+            $("#current-username").toggle();
         });
     });
-    </script>
-
-    <script type='text/javascript'>
-    var data_list = [
-        {
-        title:"Check out this crazy commercial",
-        link:"http://www.youtube.com/watch?v=UURgWOMLESY",
-        upVotes:45,
-        downVotes:0,
-        datetime:"March 01, 2013. 21:22:00",
-        username:"Purple User"
-        },
-        {
-        title:"Check out this crazy commercial",
-        link:"http://www.youtube.com/watch?v=UURgWOMLESY",
-        upVotes:15,
-        downVotes:0,
-        datetime:"June 01, 2013. 21:22:00",
-        username:"Purple User"
-        }
-    ];
-
-    var username = "Purple User"
-
-    function voteFunc(id, vote)
-    {
-        var votes = document.getElementById("votes_" + id)
-        votes.innerText = parseInt(votes.innerText) + parseInt(vote)
-        var buttons = document.getElementsByClassName("button_" + id)
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].className += " disabled";
-        }
-    };
 
     $( "form" ).on( "submit", function( event ) {
         event.preventDefault();
     });
-
-    function addLink(form)
-    {
-        var d = new Date()
-
-        var newLink = {
-            title:form.new_title.value,
-            link:form.new_link.value,
-            upVotes:0,
-            downVotes:0,
-            datetime: d.toLocaleString(),
-            username:username
-        };
-        data_list.push(newLink)
-        var ordered_data = data_list.sort(postOrderCompare)
-        $("#links-list").html(tmpl("item_tmpl", {'data_list': ordered_data}));
-    };
-
-    function changeUsername(form){
-        var newUsername = form.new_username.value;
-        if (!/^\w+$/.test(newUsername)){
-            alert("Only alphanumerical characters allowed");
-            return
-        }
-        var oldUsername = document.getElementById("username").innerText;
-        var usernames = document.getElementsByClassName("username");
-        for (var i=0; i< usernames.length; i++){
-            if (usernames[i].innerText == oldUsername){
-                usernames[i].innerText = newUsername;
-            }
-        }
-        for (var i=0; i< data_list.length; i++){
-            if (data_list[i].username == oldUsername){
-                data_list[i].username = newUsername;
-            }
-        }
-        username = newUsername;
-
-        $("#username-changeform").toggle();
-        $("#change-username").toggle();
-    }
-
-    $(window).load(function(){
-    (function(){
-      var cache = {};
-
-      this.tmpl = function tmpl(str, data){
-        var fn = !/\W/.test(str) ?
-          cache[str] = cache[str] ||
-            tmpl(document.getElementById(str).innerHTML) :
-
-          new Function("obj",
-            "var p=[],print=function(){p.push.apply(p,arguments);};" +
-
-            "with(obj){p.push('" +
-
-            str
-              .replace(/[\r\t\n]/g, " ")
-              .split("<%").join("\t")
-              .replace(/((^|%>)[^\t]*)'/g, "$1\r")
-              .replace(/\t=(.*?)%>/g, "',$1,'")
-              .split("\t").join("');")
-              .split("%>").join("p.push('")
-              .split("\r").join("\\'")
-          + "');}return p.join('');");
-
-        return data ? fn( data ) : fn;
-      };
-    })();
-
-
-    var ordered_data = data_list.sort(postOrderCompare)
-
-    $("#links-list").html(tmpl("item_tmpl", {'data_list': ordered_data}));
-
-    });//]]>
-    function postOrderCompare(a, b) {
-        var aDate = new Date(Date.parse(a.datetime));
-        var bDate = new Date(Date.parse(b.datetime));
-        if (aDate < bDate)
-            return 1;
-        if (Date(Date.parse(a.datetime)) > Date(Date.parse(b.datetime)))
-            return -1;
-        // a must be equal to
-        return 0;
-        }
     </script>
+
+
 </body>
 </html>
