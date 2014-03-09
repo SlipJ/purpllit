@@ -1,18 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" ng-app="linksListApp">
 <head>
     <title>Purpllit</title>
     <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/purpllit.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-    <script src="/static/purpllit.js"></script>
+    <!--<script src="/static/purpllit.js"></script>-->
+    <script src="/static/angular-app/lib/angular/angular.js"></script>
+    <script src="/static/angular-app/lib/angular/angular-route.js"></script>
+    <script src="/static/angular-app/lib/angular/angular-resource.js"></script>
+
+    <script src="/static/angular-app/js/app.js"></script>
+    <script src="/static/angular-app/js/services.js"></script>
+    <script src="/static/angular-app/js/filters.js"></script>
+    <script src="/static/angular-app/js/controllers.js"></script>
+    <script src="/static/angular-app/js/directives.js"></script>
 </head>
 
 
 <body>
     <!-- Title -->
-    <div id="head-title" class="h1 text-center purple-title">
+    <div id="head-title" class="h1 text-center purple-title" ng-click="">
         Purpllit
     </div>
     <div id="subtitle" style="display:none" class="text-center">
@@ -21,94 +30,9 @@
     <!-- End Title -->
 
 
-
-    <div class="container-fluid">
-        <!-- Username and change -->
-        <div class="row" id="current-username">
-            <div class="col-sm-2 pull-right">
-                <button type="button" class="btn btn-default">Change</button>
-            </div>
-            <div class="pull-right col-sm-3">Your username: <span id="username" class="username">Purple User</span></div>
-        </div>
-        <div id="change-username" class="row" style="display:none">
-            <div class="col-sm-2 pull-right">
-            </div>
-            <div class="pull-right col-sm-3">
-                <form  id="new_username_form" role="form" class="form-inline" onsubmit="Purpllit.changeUsername(this)">
-                    <div class="form-group">
-                        <input id="new_username" class="form-control" type="text" placeholder="Enter New Username">
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-            </div>
-        </div>
-        <!-- End Username and change -->
-
-
-        <!-- New link Form -->
-        <div class="row">
-            <div class="col-sm-6">
-                <form id="new_link_form" role="form" class="form-inline" onsubmit="Purpllit.addLink(this)">
-                    <div class="form-group">
-                        <input id="new_title" class="form-control" type="text" placeholder="Title" required>
-                    </div>
-                    <div class="form-group">
-                        <input id="new_link" class="form-control" type="url" placeholder="Link" required>
-                    </div>
-                    <button type="submit" class="btn btn-default">Submit</button>
-                </form>
-            </div>
-        </div>
-        <!-- End New link Form -->
-    </div>
-    <br>
-
-
-
-    <!-- Links List -->
-    <div class="container-fluid links-list" id="links-list">
-    </div>
-    <!-- End Links List -->
-
-
-    <!-- Link template -->
-    <script type="text/html" id="item_tmpl">
-        <% for ( var i = 0; i < data_list.length; i++ ) { %>
-            <div class="table-bordered img-rounded col-md-8">
-                <a href="<%=data_list[i].link%>" class="modal-title">
-                    <span id="votes_<%=i%>" class="badge"><%=data_list[i].votes%></span> <%=data_list[i].title%></a>
-                <div class="btn-group pull-right">
-                  <button type="button"
-                          class="btn btn-default button_<%=i%> vote_up <% if ( data_list[i].voted && data_list[i].voted_up) { %>active<% } %>"
-                          onclick="Purpllit.vote(<%=i%>, 1)"
-                          <% if ( data_list[i].voted && !data_list[i].voted_up) { %>disabled<% } %>>Up</button>
-                  <button type="button" class="btn btn-default button_<%=i%> vote_down <% if ( data_list[i].voted && !data_list[i].voted_up) { %>active<% } %>"
-                          onclick="Purpllit.vote(<%=i%>, -1)"
-                          <% if ( data_list[i].voted && data_list[i].voted_up) { %>disabled<% } %>>Down</button>
-                </div>
-                <p class="small"><%=data_list[i].datetime%>, by <span class="username"><%=data_list[i].username%></span></p>
-            </div>
-        <% } %>
-    </script>
-    <!-- End Link template -->
-
-
-    <script>
-    $().ready(function(){
-        $("#head-title").click(function(){
-            $("#subtitle").toggle();
-        });
-        $("#current-username").click(function(){
-            $("#change-username").toggle();
-            $("#current-username").toggle();
-        });
-    });
-
-    $( "form" ).on( "submit", function( event ) {
-        event.preventDefault();
-    });
-    </script>
-
+    <!-- Angular view -->
+    <div ng-view></div>
+    <!-- End Angular view -->
 
 </body>
 </html>

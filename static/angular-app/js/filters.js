@@ -1,7 +1,13 @@
-/**
- * Created with PyCharm.
- * User: ilyastavitksy
- * Date: 3/6/14
- * Time: 3:27 PM
- * To change this template use File | Settings | File Templates.
- */
+/* Filters */
+
+angular.module('linkListFilters', []).filter('buttonActive', function() {
+  return function(input) {
+    return input ? 'active' : '';
+  };
+});
+
+angular.module('linkListFilters', []).filter('buttonDisabled', function() {
+  return function(input) {
+    return input ? 'disabled' : '';
+  };
+});

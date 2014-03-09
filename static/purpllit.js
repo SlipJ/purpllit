@@ -2,7 +2,25 @@
 (function (Purpllit, $) {
 
     Purpllit.username = "Purple User";
-    var data_list = []
+    var data_list = [
+        {
+        "title":"Check out this crazy commercial",
+        "link":"http://www.youtube.com/watch?v=UURgWOMLESY",
+        "votes": 45,
+        "datetime":"March 01, 2013. 21:22:00",
+        "username":"Purple User",
+        "voted": 0,
+        "voted_up": 0
+        },
+        {
+        "title":"Check out another crazy commercial",
+        "link":"http://www.youtube.com/watch?v=UURgWOMLESY",
+        "votes":15,
+        "datetime":"June 01, 2013. 21:22:00",
+        "username":"someone else",
+        "voted": 0,
+        "voted_up": 0
+    }];
 
     Purpllit.vote = function voteFunc(id, vote)
     {
@@ -135,6 +153,20 @@
 
     });
     // End Templates
+
+    $().ready(function () {
+        $("#head-title").click(function () {
+            $("#subtitle").toggle();
+        });
+        $("#current-username").click(function () {
+            $("#change-username").toggle();
+            $("#current-username").toggle();
+        });
+    });
+
+    $("form").on("submit", function (event) {
+        event.preventDefault();
+    });
 
 }(window.Purpllit = window.Purpllit || {}, jQuery));
 

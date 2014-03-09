@@ -1,9 +1,50 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+<div class="container-fluid" >
+    <!-- Username and change -->
+    <div class="row" id="current-username" ng-hide="change">
+        <div class="col-sm-2 pull-right">
+            <button type="button" class="btn btn-default" ng-click="showUserChangeForm()">Change</button>
+        </div>
+        <div class="pull-right col-sm-3">Your username: <span id="username" class="username">{{ user }}</span></div>
+    </div>
+    <div id="change-username" class="row ng-hide" ng-show="change">
+        <div class="col-sm-2 pull-right">
+        </div>
+        <div class="pull-right col-sm-3">
+            <form id="new_username_form" role="form" class="form-inline" ng-submit="changeUsername(username)">
+                <div class="form-group">
+                    <input ng-model="username" id="new_username" class="form-control" type="text" placeholder="Enter New Username">
+                </div>
+                <button type="submit" class="btn btn-default" ng-model="change" ng-click="hideUserChangeForm()">Submit</button>
+            </form>
+        </div>
+    </div>
+    <!-- End Username and change -->
 
-</body>
-</html>
+
+    <!-- New link Form -->
+    <div class="row">
+        <div class="col-sm-6">
+            <form role="form" class="form-inline" ng-submit="addLink(obj)">
+                <div class="form-group">
+                    <input ng-model="obj.title" id="new_title" class="form-control" type="text" placeholder="Title" required>
+                </div>
+                <div class="form-group">
+                    <input ng-model="obj.link" id="new_link" class="form-control" type="url" placeholder="Link" required>
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+        </div>
+    </div>
+    <!-- End New link Form -->
+</div>
+
+<br>
+
+
+<!--Links list-->
+<div class="container-fluid links-list" id="links-list">
+    <div ng-repeat="link in links" class="table-bordered img-rounded col-md-8" style="margin-bottom:5px;">
+        <pi-link></pi-link>
+    </div>
+</div>
+<!-- End Links list-->

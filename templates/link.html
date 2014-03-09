@@ -1,9 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
+<a href="{{link.link}}" class="modal-title">
+    <span id="votes" class="badge">{{link.votes}}</span> {{link.title}}
+</a>
 
-</body>
-</html>
+<div class="btn-group pull-right" style="margin-top:5px;">
+    <button type="button"
+            class="btn btn-default vote_up"
+            ng-class="{active: link.voted && link.voted_up, disabled: link.voted && !link.voted_up}"
+            ng-click="linkVote(link, 1)">Up</button>
+    <button type="button"
+            ng-class="{active: link.voted && !link.voted_up, disabled: link.voted && link.voted_up}"
+            class="btn btn-default vote_down"
+            ng-click="linkVote(link, -1)">Down</button>
+</div>
+<p class="small">{{link.datetime | date}}, by <span class="username">{{link.username}}</span></p>
